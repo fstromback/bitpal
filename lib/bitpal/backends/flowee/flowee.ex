@@ -16,8 +16,6 @@ defmodule BitPal.Backend.Flowee do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
-  # Returns the amount of satoshi to ask for. Note: This will be modified slightly so that the system
-  # is able to differentiate between different transactions.
   @impl Backend
   def register(backend, invoice) do
     GenServer.call(backend, {:register, invoice})
@@ -43,7 +41,7 @@ defmodule BitPal.Backend.Flowee do
 
   @impl true
   def init(state) do
-    Logger.info("Starting Flowee")
+    Logger.info("Starting Flowee backend")
 
     state = start_flowee(state)
 
@@ -56,10 +54,10 @@ defmodule BitPal.Backend.Flowee do
     state = watch_wallet(invoice.address, state)
 
     # Register the wallet with the Transactions svc.
-    satoshi = Transactions.new(invoice)
+    invoice = Transactions.new(invoice)
 
     # Good to go! Report back!
-    {:reply, satoshi, state}
+    {:reply, invoice, state}
   end
 
   @impl true

@@ -2,7 +2,6 @@ import Config
 
 case Config.config_env() do
   :dev ->
-    # Mocking during development. If you want to test live comment it out.
     config :bitpal,
       backends: [{BitPal.BackendMock, auto: true}]
 
